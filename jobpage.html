@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Feed</title>
+    <link rel="stylesheet" href="index.html">
+    <link rel="stylesheet" href="jobpage.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-container">
+            <div class="logo-icon">f</div>
+            <div class="logo-text">Face Book</div>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search posts...">
+            <div class="search-icon">🔍</div>
+        </div>
+        
+        <div class="nav-controls">
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </nav>
+    
+    <div class="content">
+        <div class="filter-controls">
+            <button class="filter-btn active" data-filter="latest">Latest First</button>
+            <button class="filter-btn" data-filter="oldest">Oldest First</button>
+            <button class="filter-btn" data-filter="most-liked">Most Liked</button>
+        </div>
+
+        <div class="post-form">
+            <textarea class="post-input" id="postInput" placeholder="What's on your mind?"></textarea>
+            <input type="text" class="image-url-input" id="imageUrlInput" placeholder="Add image URL (optional)">
+            <button class="post-btn" id="postBtn">Post</button>
+        </div>
+
+        <div class="posts-container" id="postsContainer">
+            <!-- Posts will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Edit Post Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3>Edit Post</h3>
+            <textarea class="post-input" id="editPostInput"></textarea>
+            <input type="text" class="image-url-input" id="editImageUrlInput" placeholder="Image URL">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" id="cancelEdit">Cancel</button>
+                <button class="modal-btn confirm-btn" id="saveEdit">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h3>Delete Post</h3>
+            <p>Are you sure you want to delete this post?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" id="cancelDelete">Cancel</button>
+                <button class="modal-btn confirm-btn" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+<script src="jobpage.js"></script>
+</body>
+</html>
