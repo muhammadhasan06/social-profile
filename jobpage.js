@@ -2,6 +2,7 @@
         const postsContainer = document.getElementById('postsContainer');
         const postInput = document.getElementById('postInput');
         const imageUrlInput = document.getElementById('imageUrlInput');
+        const imageError = document.getElementById('imageError');
         const postBtn = document.getElementById('postBtn');
         const searchInput = document.getElementById('searchInput');
         const filterBtns = document.querySelectorAll('.filter-btn');
@@ -9,23 +10,26 @@
         const editModal = document.getElementById('editModal');
         const editPostInput = document.getElementById('editPostInput');
         const editImageUrlInput = document.getElementById('editImageUrlInput');
+        const editImageError = document.getElementById('editImageError');
         const cancelEdit = document.getElementById('cancelEdit');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
         const saveEdit = document.getElementById('saveEdit');
         const deleteModal = document.getElementById('deleteModal');
         const cancelDelete = document.getElementById('cancelDelete');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
         const confirmDelete = document.getElementById('confirmDelete');
 
         // Load posts from localStorage or use sample posts
         let posts = JSON.parse(localStorage.getItem('posts')) || [
             {
                 id: 1,
-                user: "John Doe",
+                user: "Muhammad Hasan",
                 text: "Just finished my morning run! Feeling energized for the day ahead. 🏃‍♂️",
-                time: "2 hours ago",
-                likes: 15,
+                time: "5 mints ago",
+                likes: 5,
                 liked: false,
                 imageUrl: "",
-                reactions: { '😂': 0, '👍': 0, '😢': 0, '🔥': 0 },
+                reactions: { '😂': 0, '👍': 0, '😢': 0 },
                 userReaction: null
             },
             {
@@ -36,23 +40,23 @@
                 likes: 42,
                 liked: true,
                 imageUrl: "",
-                reactions: { '😂': 0, '👍': 0, '😢': 0, '🔥': 0 },
+                reactions: { '😂': 0, '👍': 0, '😢': 0},
                 userReaction: null
             },
             {
                 id: 3,
-                user: "Mike Johnson",
+                user: "Muhammad Ayan",
                 text: "Working on a new project that I'm really excited about! Can't wait to share more details soon. 💼",
                 time: "1 day ago",
                 likes: 28,
                 liked: false,
                 imageUrl: "",
-                reactions: { '😂': 0, '👍': 0, '😢': 0, '🔥': 0 },
+                reactions: { '😂': 0, '👍': 0, '😢': 0},
                 userReaction: null
             },
             {
                 id: 4,
-                user: "Emily Chen",
+                user: "Muhammad Sufiyan",
                 text: "Tried a new recipe today - homemade pasta from scratch! It turned out better than expected. 🍝",
                 time: "1 day ago",
                 likes: 36,
@@ -60,7 +64,18 @@
                 imageUrl: "",
                 reactions: { '😂': 0, '👍': 0, '😢': 0, '🔥': 0 },
                 userReaction: null
-            }
+            },
+              {
+                id: 5,
+                user: "Jaffar Aman",
+                text: "Tried a new recipe today - homemade pasta from scratch! It turned out better than expected. 🍝",
+                time: "1 day ago",
+                likes: 36,
+                liked: false,
+                imageUrl: "",
+                reactions: { '😂': 0, '👍': 0, '😢': 0, '🔥': 0 },
+                userReaction: null
+            },
         ];
 
         // State variables
@@ -93,9 +108,20 @@
             
             themeToggle.addEventListener('click', toggleTheme);
             cancelEdit.addEventListener('click', function() { editModal.style.display = 'none'; });
+            cancelEditBtn.addEventListener('click', function() { editModal.style.display = 'none'; });
             saveEdit.addEventListener('click', saveEditedPost);
             cancelDelete.addEventListener('click', function() { deleteModal.style.display = 'none'; });
+            cancelDeleteBtn.addEventListener('click', function() { deleteModal.style.display = 'none'; });
             confirmDelete.addEventListener('click', deletePostConfirmed);
+        }
+
+        // Validate image URL
+        function isValidImageUrl(url) {
+            if (!url) return true; // Empty URL is valid (no image)
+            
+            // Check if URL has a valid image extension
+            const imageExtensions = /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
+            return imageExtensions.test(url);
         }
 
         // Create a new post
@@ -106,6 +132,14 @@
             if (!text && !imageUrl) {
                 alert('Please enter some text or an image URL');
                 return;
+            }
+            
+            // Validate image URL
+            if (imageUrl && !isValidImageUrl(imageUrl)) {
+                imageError.style.display = 'block';
+                return;
+            } else {
+                imageError.style.display = 'none';
             }
             
             const newPost = {
@@ -197,7 +231,7 @@
                     </div>
                 </div>
                 <div class="post-content">${post.text}</div>
-                ${post.imageUrl ? `<img src="${post.imageUrl}" class="post-image" alt="Post image">` : ''}
+                ${post.imageUrl ? `<img src="${post.imageUrl}" class="post-image" alt="Post image" onerror="this.style.display='none'">` : ''}
                 <div class="post-actions">
                     <button class="like-btn ${post.liked ? 'liked' : ''}">
                         ❤️ <span class="like-count">${post.likes}</span>
@@ -290,6 +324,7 @@
                     editPostInput.value = posts[i].text;
                     editImageUrlInput.value = posts[i].imageUrl || '';
                     editModal.style.display = 'flex';
+                    editImageError.style.display = 'none';
                     break;
                 }
             }
@@ -298,10 +333,19 @@
         // Save edited post
         function saveEditedPost() {
             if (postToEdit) {
+                // Validate image URL
+                const imageUrl = editImageUrlInput.value.trim();
+                if (imageUrl && !isValidImageUrl(imageUrl)) {
+                    editImageError.style.display = 'block';
+                    return;
+                } else {
+                    editImageError.style.display = 'none';
+                }
+                
                 for (let i = 0; i < posts.length; i++) {
                     if (posts[i].id === postToEdit) {
                         posts[i].text = editPostInput.value;
-                        posts[i].imageUrl = editImageUrlInput.value;
+                        posts[i].imageUrl = imageUrl;
                         savePosts();
                         renderPosts();
                         editModal.style.display = 'none';
